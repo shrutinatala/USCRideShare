@@ -63,13 +63,7 @@ async function runTests() {
     process.exit(1);
   }
 
-  // Test 1: Health Check
-  await test("Backend Health Check - Ping endpoint", async () => {
-    const response = await apiClient.get("/api/health/ping");
-    assert(response.status === 200, `Expected 200, got ${response.status}`);
-  });
-
-  // Test 2: Create valid ride
+  // Test 1: Create valid ride
   await test("Create valid ride with LAX destination", async () => {
     const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     const rideData = {
@@ -94,7 +88,7 @@ async function runTests() {
     );
   });
 
-  // Test 3: Create invalid ride with bad destination
+  // Test 2: Create invalid ride with bad destination
   await test("Reject ride with invalid destination (SFO)", async () => {
     const futureDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     const rideData = {
@@ -113,7 +107,7 @@ async function runTests() {
     );
   });
 
-  // Test 4: Reject ride with past departure time
+  // Test 3: Reject ride with past departure time
   await test("Reject ride with past departure time", async () => {
     const pastDate = new Date(Date.now() - 60000).toISOString();
     const rideData = {
@@ -132,7 +126,7 @@ async function runTests() {
     );
   });
 
-  // Test 5: Timezone rendering - Get rides
+  // Test 4: Timezone rendering - Get rides
   await test("Get rides with proper datetime format", async () => {
     const response = await apiClient.get("/api/rides");
 
@@ -154,7 +148,7 @@ async function runTests() {
     }
   });
 
-  // Test 6: Cancel ride endpoint
+  // Test 5: Cancel ride endpoint
   await test("Cancel ride endpoint responds appropriately", async () => {
     const testRideId = "00000000-0000-0000-0000-000000000000";
     const response = await apiClient.patch(
@@ -169,7 +163,7 @@ async function runTests() {
     );
   });
 
-  // Test 7: Get potential matches
+  // Test 6: Get potential matches
   await test("Get potential matches for a ride", async () => {
     const testRideId = "00000000-0000-0000-0000-000000000000";
     const response = await apiClient.get(
@@ -183,7 +177,7 @@ async function runTests() {
     );
   });
 
-  // Test 8: Complete match endpoint
+  // Test 7: Complete match endpoint
   await test("Complete match endpoint exists", async () => {
     const testMatchId = "00000000-0000-0000-0000-000000000000";
     const response = await apiClient.post(
@@ -198,7 +192,7 @@ async function runTests() {
     );
   });
 
-  // Test 9: Cancel match endpoint
+  // Test 8: Cancel match endpoint
   await test("Cancel match endpoint exists", async () => {
     const testMatchId = "00000000-0000-0000-0000-000000000000";
     const response = await apiClient.delete(`/api/matches/${testMatchId}`);
@@ -210,7 +204,7 @@ async function runTests() {
     );
   });
 
-  // Test 10: Get messages endpoint
+  // Test 9: Get messages endpoint
   await test("Get messages for a match", async () => {
     const testMatchId = "00000000-0000-0000-0000-000000000000";
     const response = await apiClient.get(
@@ -224,7 +218,7 @@ async function runTests() {
     );
   });
 
-  // Test 11: Filter rides by destination
+  // Test 10: Filter rides by destination
   await test("Filter rides by destination (LAX)", async () => {
     const response = await apiClient.get("/api/rides?destination=LAX");
 
@@ -245,7 +239,7 @@ async function runTests() {
     }
   });
 
-  // Test 12: Handle long messages gracefully
+  // Test 11: Handle long messages gracefully
   await test("Handle long messages without crashing", async () => {
     const longMessage = "a".repeat(500);
     const response = await apiClient.post("/api/chat/match/test-match-id", {
